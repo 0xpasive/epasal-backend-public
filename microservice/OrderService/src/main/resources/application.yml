@@ -35,14 +35,14 @@ payment:
   service:
     esewa:
       url: https://rc-epay.esewa.com.np/api/epay/main/v2/form
-      secret_key: "8gBm/:&EnhH.1/q"
+      secret_key: "${ESEWA_SECRET_KEY}"
       product_code: "EPAYTEST"
       failureUrl: https://epasal-frontend.vercel.app/payment/failure
       successUrl: https://epasal-frontend.vercel.app/payment/success
 
 khalti:
   secret:
-    key: "4fdfe55221284b3193908dcf4048887a"
+    key: "${KHALTI_SECRET_KEY}"
   url: "https://dev.khalti.com/api/v2/"
   return_url: "https//epasal-frontend.vercel.app/payment./khalti/success"
   website_url: "https://epasal-frontend.vercel.app/"
