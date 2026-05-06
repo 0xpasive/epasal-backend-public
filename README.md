@@ -88,6 +88,22 @@ This starts:
 - RabbitMQ: `5672` (AMQP), `15672` (management UI)
 - Redis: `6379`
 
+## Cloud Deployment (AWS EC2 + Docker)
+
+This backend is deployed on an **AWS EC2** instance using **Docker containerization** (the same services you run locally are packaged as containers and orchestrated with Docker Compose on the server).
+
+High-level deployment approach:
+
+- Build/publish service images (or build on the instance)
+- Copy/update the Compose config on the EC2 host
+- Run the stack with `docker compose up -d` (and `docker compose pull` when using a registry)
+
+Operational notes:
+
+- Typically only the **API Gateway** is exposed publicly; the other services stay on the Docker network.
+- Ensure the EC2 **security group** only allows required inbound ports (commonly `80/443` for HTTP/HTTPS, plus SSH for administration).
+- Public Swagger UI (via gateway): https://backend.poudelsunil.info.np/swagger-ui/index.html
+
 ## Notes / Config
 
 - **OAuth2 (Google)**: `UserService` has Google OAuth client config in `application.yml`. For local auth flows you’ll need to use your own client id/secret and correct redirect URI.
