@@ -33,4 +33,7 @@ build/
 ### VS Code ###
 .vscode/
 
-
+### Secrets ###
+.env
+**/*.env
+**/keys/private.key
