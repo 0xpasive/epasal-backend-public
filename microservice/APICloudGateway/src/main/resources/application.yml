@@ -1,0 +1,132 @@
+spring:
+  application:
+    name: APICloudGateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: UserService
+              uri: lb://UserService
+              predicates:
+                - Path=/user/**
+              filters:
+                - RewritePath= /user/(?<remaining>.*), /api/v1/auth/${remaining}
+
+            - id: googleAuth
+              uri: lb://UserService
+              predicates:
+                - Path= /oauth2/**
+              filters:
+                - RewritePath= /oauth2/(?<remaining>.*), /oauth2/${remaining}
+
+            - id: googleCallback
+              uri: lb://UserService
+              predicates:
+                - Path= /login/oauth2/code/google
+              filters:
+                - RewritePath= /login/(?<remaining>.*), /login/${remaining}
+
+            - id: UserService-admin
+              uri: lb://UserService
+              predicates:
+                - Path=/admin/**
+              filters:
+                - RewritePath=/admin/(?<remaining>.*), /api/v1/auth/admin/${remaining}
+
+
+            - id: ProductService
+              uri: lb://ProductService
+              predicates:
+                - Path=/products , /products/**
+              filters:
+                - RewritePath= /products(?<remaining>/?.*), /api/v1/products${remaining}
+
+            - id: CartService
+              uri: lb://CartService
+              predicates:
+                - Path=/cart , /cart/**
+              filters:
+                - RewritePath= /cart(?<remaining>/?.*), /api/v1/cart${remaining}
+
+            - id: OrderService
+              uri: lb://OrderService
+              predicates:
+                - Path=/orders , /orders/**
+              filters:
+                - RewritePath= /orders(?<remaining>/?.*), /api/v1/orders${remaining}
+
+            - id: InventoryService
+              uri: lb://InventoryService
+              predicates:
+                - Path=/inventory/**
+              filters:
+                - RewritePath= /inventory/(?<remaining>.*), /api/v1/inventory/${remaining}
+
+            - id: user-service-docs
+              uri: lb://UserService
+              predicates:
+                - Path=/docs/user/v3/api-docs/**
+
+            - id: product-service-docs
+              uri: lb://ProductService
+              predicates:
+                - Path=/docs/products/v3/api-docs
+            - id: cart-service-docs
+              uri: lb://CartService
+              predicates:
+                    - Path=/docs/cart/v3/api-docs
+            - id: order-service-docs
+              uri: lb://OrderService
+              predicates:
+                    - Path=/docs/order/v3/api-docs
+            - id: inventory-service-docs
+              uri: lb://InventoryService
+              predicates:
+                    - Path=/docs/inventory/v3/api-docs
+
+
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOrigins:
+                  - "https://epasal-frontend.vercel.app"
+                  - "https://epasal-admin.vercel.app"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - PATCH
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders:
+                  - "*"
+                allow-credentials: true
+
+          httpclient:
+            max-initial-line-length: 4096
+            max-header-size: 8192
+          default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: User Service
+        url: /docs/user/v3/api-docs
+      - name: Product Service
+        url: /docs/products/v3/api-docs
+      - name: Cart Service
+        url: /docs/cart/v3/api-docs
+      - name: Order Service
+        url: /docs/order/v3/api-docs
+      - name: Inventory Service
+        url: /docs/inventory/v3/api-docs

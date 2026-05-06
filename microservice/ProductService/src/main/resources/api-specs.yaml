@@ -1,0 +1,441 @@
+openapi: 3.1.1
+info:
+  title: Product Service API
+  version: 1.0.0
+  description: API for managing products in the Product Service.
+servers:
+  - url: http://localhost:8080/api/v1/products
+    description: local development server
+tags:
+  - name: Product
+  - name: Review
+paths:
+  /all:
+    get:
+      tags:
+        - Product
+      summary: Get all products
+      description: Get all products.
+      responses:
+        '200':
+          description: A list of products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ProductsResponse'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+
+  /all/{category}:
+    get:
+      tags:
+        - Product
+      summary: get all products by category
+      description: get all products by category.
+      parameters:
+        - in: path
+          name: category
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ProductsResponse'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+
+  /{id}:
+    get:
+      tags:
+        - Product
+      summary: Get product by ID
+      description: get product by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ProductResponse'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Product not found.
+        '500':
+          description: Internal server error.
+
+  /batch:
+    post:
+      tags:
+        - Product
+      summary: Get batch products by IDs
+      description: Get batch products by IDs.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchProductRequest'
+      responses:
+        '200':
+          description: A list of products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ProductsResponse'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+
+  /add:
+    post:
+      tags:
+        - Product
+      summary: Add new products
+      description: add new products with details and image.
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddProductRequest'
+      responses:
+        '201':
+          description: Product created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ProductResponse'
+        '400':
+          description: Invalid request.
+        '500':
+          description: Internal server error.
+  /update:
+    patch:
+      tags:
+        - Product
+      summary: Update product details
+      description: update product details of existing product.
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+
+              $ref: '#/components/schemas/UpdateProduct'
+      responses:
+        '200':
+          description: Product updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ProductResponse'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Product not found.
+        '500':
+          description: Internal server error.
+
+  /delete/{id}:
+    delete:
+      tags:
+        - Product
+      summary: Delete product by ID
+      description: delete product by ID.
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_Void'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Product not found.
+        '500':
+          description: Internal server error.
+
+  /review/add:
+    post:
+      tags:
+        - Review
+      description: Submit a review for a product.
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewRequest'
+      responses:
+        '201':
+          description: Review submitted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ReviewResponse'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Product not found.
+        '500':
+          description: Internal server error.
+
+  /review/all/{id}:
+    get:
+      tags:
+        - Review
+      description: Get all reviews for the product.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reviews fetched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ProductReviewResponse'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Product not found.
+        '500':
+          description: Internal server error.
+
+components:
+  schemas:
+    ApiResponse_Void:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Operation successful"
+        data:
+          type: object
+          nullable: true
+
+    ApiResponse_ProductsResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Product Fetched Successfully"
+        data:
+          type: array
+          content:
+            $ref: '#/components/schemas/ProductResponse'
+          timestamp:
+            type: string
+            format: date-time
+            example: "2024-06-01T12:00:00Z"
+
+    ApiResponse_ProductResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Product Fetched Successfully"
+        data:
+          product:
+            $ref: '#/components/schemas/ProductResponse'
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-06-01T12:00:00Z"
+
+    ProductResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: "Product Name"
+        description:
+          type: string
+          example: "Product Description"
+        price:
+          type: number
+          example: 19.99
+        category:
+          type: string
+          example: "Category Name"
+        imageUrl:
+          type: string
+          example: "https://example.com/image.jpg"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-06-01T12:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-06-01T12:00:00Z"
+
+    BatchProductRequest:
+      type: object
+      properties:
+        productIds:
+          type: array
+          items:
+            type: string
+          example: [ "123e4567-e89b-12d3-a456-426614174000", "123e4567-e89b-12d3-a456-426614174001" ]
+
+    AddProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Potato Chips"
+        price:
+          type: number
+          example: 50.0
+        description:
+          type: string
+          example: "A bag of delicious potato chips."
+        category:
+          type: string
+          example: 'food'
+        image:
+          type: file
+          format: binary
+
+    UpdateProduct:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: "Potato Chips"
+        price:
+          type: number
+          example: 50.0
+        description:
+          type: string
+          example: "A bag of delicious potato chips."
+        category:
+          type: string
+          example: 'food'
+        image:
+          type: file
+          format: binary
+
+    ApiResponse_ReviewResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Review submitted successfully"
+        data:
+          review:
+            $ref: '#/components/schemas/ReviewResponse'
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-06-01T12:00:00Z"
+
+    ApiResponse_ProductReviewResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Reviews fetched successfully"
+        data:
+          productReviews:
+            $ref: '#/components/schemas/ProductReviewResponse'
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-06-01T12:00:00Z"
+
+    ReviewRequest:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "ep-product-123"
+        rating:
+          type: number
+          example: 4.5
+        review:
+          type: string
+          example: "Great product! Highly recommend."
+
+    ReviewResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: "user-123"
+        rating:
+          type: number
+          example: 4.5
+        review:
+          type: string
+          example: "Great product! Highly recommend."
+
+    ProductReviewResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "ep-product-123"
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewResponse'
+        totalReviews:
+          type: integer
+          example: 10
+        averageRating:
+          type: number
+          example: 4.5
+
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: [ ]

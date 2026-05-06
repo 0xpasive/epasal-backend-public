@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>Order Confirmation</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f6f7f9;">
+<!-- Preheader (hidden in most clients) -->
+<div
+        style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden; mso-hide:all;"
+>
+    Your order has been confirmed. View order details and payment invoice.
+</div>
+
+<table role="presentation" style="width:100%; border-spacing:0; border-collapse:separate; background-color:#f6f7f9; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+    <tr>
+        <td style="padding:24px 12px; text-align:center;">
+            <table
+                    role="presentation"
+                    style="width:600px; max-width:600px; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt; text-align:left; margin:0 auto;"
+            >
+                <tr>
+                    <td style="padding:0 0 16px 0;">
+                        <h1
+                                style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:20px; line-height:28px; color:#111827;"
+                        >
+                            Order Confirmation
+                        </h1>
+                        <p
+                                style="margin:8px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#111827;"
+                        >
+                            Your order with
+                            <span
+                                    th:text="${order != null and order.id != null ? order.id : '—'}"
+                                    style="font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;"
+                            ></span>
+                            is confirmed. Here is the order detail.
+                        </p>
+                        <p
+                                style="margin:6px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#6b7280;"
+                        >
+                            Thank you for your purchase. Below are your order details and payment invoice.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Section 1: Order details -->
+                <tr>
+                    <td
+                            style="background-color:#ffffff; border:1px solid #e5e7eb; border-radius:16px; overflow:hidden;"
+                    >
+                        <table role="presentation" style="width:100%; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                            <tr>
+                                <td style="padding:16px 18px; border-bottom:1px solid #e5e7eb;">
+                                    <table role="presentation" style="width:100%; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                        <tr>
+                                            <td style="padding:0; vertical-align:top;">
+                                                <h2
+                                                        style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:22px; color:#111827;"
+                                                >
+                                                    Order #<span th:text="${order != null and order.id != null ? order.id : '—'}"></span>
+                                                </h2>
+                                                <p
+                                                        style="margin:6px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:18px; color:#6b7280;"
+                                                >
+                                                    Status:
+                                                    <span
+                                                            th:text="${order != null and order.status != null ? order.status : 'Unknown'}"
+                                                            style="display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; border:1px solid #e5e7eb;"
+                                                            th:style="(${order != null and order.status == 'CONFIRMED'})
+																	? 'display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; background-color:#16a34a; color:#ffffff; border:1px solid #16a34a;'
+																	: ((${order != null and order.status == 'CONFLICT'})
+																		? 'display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; background-color:#dc2626; color:#ffffff; border:1px solid #dc2626;'
+																		: 'display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; background-color:#f59e0b; color:#111827; border:1px solid #f59e0b;')"
+                                                    ></span>
+                                                </p>
+                                            </td>
+                                            <td style="padding:0; vertical-align:top; text-align:right;">
+                                                <p
+                                                        style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#6b7280;"
+                                                >
+                                                    Order date:
+                                                    <span th:text="${order != null and order.orderDate != null ? order.orderDate : 'Not provided'}"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="padding:16px 18px;">
+                                    <!-- Summary block -->
+                                    <table role="presentation" style="width:100%; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                        <tr>
+                                            <td style="padding:0 0 14px 0; vertical-align:top;">
+                                                <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#6b7280; font-weight:bold;">
+                                                    Payment
+                                                </p>
+                                                <p style="margin:6px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#111827;">
+                                                    <span th:text="${order != null and order.paymentMethod != null ? order.paymentMethod : 'Not specified'}"></span>
+                                                </p>
+                                                <div
+                                                        th:if="${order != null and order.transactionId != null and !#strings.isEmpty(order.transactionId)}"
+                                                        style="margin-top:6px;"
+                                                >
+                                                    <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#6b7280;">
+                                                        Transaction ID:
+                                                        <span
+                                                                th:text="${order.transactionId}"
+                                                                style="font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; color:#111827;"
+                                                        ></span>
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding:0 0 14px 0; vertical-align:top;">
+                                                <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#6b7280; font-weight:bold;">
+                                                    Total amount
+                                                </p>
+                                                <p style="margin:6px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:22px; color:#111827; font-weight:bold;">
+                                                    NPR
+                                                    <span th:text="${order != null and order.totalAmount != null ? order.totalAmount : 'Not available'}"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+
+                                    </table>
+
+                                    <!-- Items -->
+                                    <div th:if="${order != null and order.orderItems != null and !#lists.isEmpty(order.orderItems)}" style="margin-top:16px;">
+                                        <p style="margin:0 0 8px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:16px; color:#6b7280; font-weight:bold;">
+                                            Items
+                                        </p>
+                                        <table role="presentation" style="width:100%; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
+                                            <tr style="background-color:#f9fafb;">
+                                                <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#6b7280; font-weight:bold;">Item</td>
+                                                <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#6b7280; font-weight:bold; width:80px; text-align:center;">Qty</td>
+                                                <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#6b7280; font-weight:bold; width:140px; text-align:right;">Unit price</td>
+                                            </tr>
+                                            <tr th:each="item : ${order.orderItems}" style="border-top:1px solid #e5e7eb;">
+                                                <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:18px; color:#111827;">
+                                                    <span th:text="${item != null and item.productName != null ? item.productName : 'Item'}"></span>
+                                                </td>
+                                                <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:18px; color:#111827; text-align:center;">
+                                                    <span th:text="${item != null and item.quantity != null ? item.quantity : '—'}"></span>
+                                                </td>
+                                                <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:18px; color:#111827; text-align:right;">
+                                                    NPR
+                                                    <span th:text="${item != null and item.price != null ? item.price : '—'}"></span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="height:14px; font-size:0; line-height:0;">&nbsp;</td>
+                </tr>
+
+                <!-- Section 2: Payment invoice -->
+                <tr>
+                    <td
+                            style="background-color:#ffffff; border:1px solid #e5e7eb; border-radius:16px; overflow:hidden;"
+                    >
+                        <table role="presentation" style="width:100%; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                            <tr>
+                                <td style="padding:16px 18px; border-bottom:1px solid #e5e7eb;">
+                                    <table role="presentation" style="width:100%; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                        <tr>
+                                            <td style="padding:0; vertical-align:top;">
+                                                <h2
+                                                        style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:22px; color:#111827;"
+                                                >
+                                                    Payment Invoice
+                                                </h2>
+                                                <p
+                                                        style="margin:6px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:18px; color:#6b7280;"
+                                                >
+                                                    Receipt #
+                                                    <span
+                                                            th:text="${payment != null and payment.transactionId != null ? payment.transactionId : '—'}"
+                                                            style="font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; color:#111827;"
+                                                    ></span>
+                                                </p>
+                                            </td>
+                                            <td style="padding:0; vertical-align:top; text-align:right;">
+                                                <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#6b7280;">
+                                                    Issue date:
+                                                    <span th:text="${payment != null and payment.created_at != null ? payment.created_at : 'Not provided'}"></span>
+                                                </p>
+                                                <p style="margin:6px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#6b7280;">
+                                                    Status:
+                                                    <span
+                                                            th:text="${payment != null and payment.status != null ? payment.status : 'Unknown'}"
+                                                            style="display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; border:1px solid #e5e7eb;"
+                                                            th:style="(${payment != null and (payment.status == 'COMPLETED' or payment.status == 'PAID')})
+																	? 'display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; background-color:#16a34a; color:#ffffff; border:1px solid #16a34a;'
+																	: ((${payment != null and payment.status == 'PENDING'})
+																		? 'display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; background-color:#f59e0b; color:#111827; border:1px solid #f59e0b;'
+																		: ((${payment != null and (payment.status == 'CONFLICT' or payment.status == 'FAILED')})
+																			? 'display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; background-color:#dc2626; color:#ffffff; border:1px solid #dc2626;'
+																			: 'display:inline-block; margin-left:6px; padding:2px 8px; border-radius:9999px; font-size:12px; line-height:18px; font-family:Arial, Helvetica, sans-serif; background-color:#9ca3af; color:#111827; border:1px solid #9ca3af;'))"
+                                                    ></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="padding:16px 18px;">
+
+
+                                    <!-- Payment details -->
+                                    <table role="presentation" style="width:100%; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
+                                        <tr style="background-color:#f9fafb;">
+                                            <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#6b7280; font-weight:bold;">Gateway</td>
+                                            <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#6b7280; font-weight:bold;">Transaction ID</td>
+                                            <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#6b7280; font-weight:bold; text-align:right;">Amount paid</td>
+                                        </tr>
+                                        <tr style="border-top:1px solid #e5e7eb;">
+                                            <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#111827;">
+                                                <span th:text="${payment != null and payment.gateway != null ? payment.gateway : 'Not specified'}"></span>
+                                            </td>
+                                            <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#111827;">
+														<span
+                                                                th:text="${payment != null and payment.transactionId != null ? payment.transactionId : '—'}"
+                                                                style="font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;"
+                                                        ></span>
+                                            </td>
+                                            <td style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#111827; font-weight:bold; text-align:right;">
+                                                NPR
+                                                <span th:text="${payment != null and payment.amount != null ? payment.amount : 'Not available'}"></span>
+                                            </td>
+                                        </tr>
+                                        <tr style="border-top:1px solid #e5e7eb;">
+                                            <td colspan="3" style="padding:10px 10px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#6b7280;">
+                                                Created at:
+                                                <span th:text="${payment != null and payment.created_at != null ? payment.created_at : 'Not provided'}"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <p style="margin:14px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#6b7280;">
+                                        Keep this invoice for your records.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="padding:16px 0 0 0;">
+                        <p style="margin:0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#111827;">
+                            Thank you for shopping with us.
+                        </p>
+                        <p style="margin:6px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#6b7280;">
+                            View your order:
+                        </p>
+
+                        <!-- Button (email-safe) -->
+                        <table role="presentation" style="margin-top:10px; border-spacing:0; border-collapse:separate; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                            <tr>
+                                <td
+                                        style="background-color:#111827; border-radius:10px;"
+                                >
+                                    <a
+                                            href="http://localhost:3000/profile/orders/"
+                                            th:href="'http://localhost:3000/profile/orders/' + (${order != null and order.id != null ? order.id : ''})"
+                                            style="display:inline-block; padding:10px 14px; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:18px; color:#ffffff; text-decoration:none;"
+                                            target="_blank"
+                                            rel="noopener"
+                                    >
+                                        View your order
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <p style="margin:12px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#111827;">
+                            The epasal team.
+                        </p>
+                        <p style="margin:10px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:16px; color:#9ca3af;">
+                            This is an automated email. If you have questions, contact support.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

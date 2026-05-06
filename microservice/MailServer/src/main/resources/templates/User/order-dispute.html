@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>Order Cancelled - Payment Dispute</title>
+</head>
+<body style="margin:0; padding:0; background-color:#fef2f2;">
+
+<!-- Preheader -->
+<div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden;">
+    Your order has been cancelled due to a payment dispute.
+</div>
+
+<table role="presentation" style="width:100%; background-color:#fef2f2;">
+    <tr>
+        <td style="padding:24px 12px; text-align:center;">
+
+            <table role="presentation" style="width:600px; max-width:600px; margin:0 auto; text-align:left;">
+
+                <!-- Header -->
+                <tr>
+                    <td style="padding-bottom:16px;">
+                        <h1 style="margin:0; font-family:Arial; font-size:20px; color:#991b1b;">
+                            Order Cancelled
+                        </h1>
+                        <p style="margin:8px 0 0 0; font-family:Arial; font-size:13px; color:#7f1d1d;">
+                            Your order
+                            <strong>#<span th:text="${order.id}"></span></strong>
+                            has been cancelled due to a payment dispute.
+                        </p>
+                        <p style="margin:6px 0 0 0; font-family:Arial; font-size:13px; color:#7f1d1d;">
+                            The payment amount does not match the order total. Please review the details below.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Order Section -->
+                <tr>
+                    <td style="background:#ffffff; border:1px solid #fecaca; border-radius:16px;">
+
+                        <table role="presentation" style="width:100%;">
+
+                            <tr>
+                                <td style="padding:16px 18px; border-bottom:1px solid #fecaca;">
+                                    <h2 style="margin:0; font-size:16px; color:#991b1b;">
+                                        Order #<span th:text="${order.id}"></span>
+                                    </h2>
+
+                                    <p style="margin-top:6px; font-size:13px;">
+                                        Status:
+                                        <span style="background:#dc2626; color:#fff; padding:2px 8px; border-radius:999px;">
+            CANCELLED
+        </span>
+                                    </p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="padding:16px 18px;">
+
+                                    <p style="font-size:12px; color:#6b7280;"><strong>Payment Method</strong></p>
+                                    <p style="font-size:13px;">
+                                        <span th:text="${order.paymentMethod}"></span>
+                                    </p>
+
+                                    <p style="font-size:12px; color:#6b7280; margin-top:12px;"><strong>Total Amount</strong></p>
+                                    <p style="font-size:16px; font-weight:bold;">
+                                        NPR <span th:text="${order.totalAmount}"></span>
+                                    </p>
+
+                                    <div th:if="${order.transactionId}">
+                                        <p style="font-size:12px; color:#6b7280; margin-top:8px;">
+                                            Transaction ID:
+                                            <span th:text="${order.transactionId}"></span>
+                                        </p>
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+
+                <tr><td style="height:14px;"></td></tr>
+
+                <!-- Payment Section -->
+                <tr>
+                    <td style="background:#ffffff; border:1px solid #fecaca; border-radius:16px;">
+
+                        <table role="presentation" style="width:100%;">
+
+                            <tr>
+                                <td style="padding:16px 18px; border-bottom:1px solid #fecaca;">
+                                    <h2 style="margin:0; font-size:16px; color:#991b1b;">
+                                        Payment Details
+                                    </h2>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="padding:16px 18px;">
+
+                                    <table style="width:100%; border:1px solid #fecaca; border-radius:12px;">
+                                        <tr style="background:#fee2e2;">
+                                            <td style="padding:10px; font-size:12px;">Gateway</td>
+                                            <td style="padding:10px; font-size:12px;">Transaction ID</td>
+                                            <td style="padding:10px; font-size:12px; text-align:right;">Amount Paid</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding:10px;">
+                                                <span th:text="${payment.gateway}"></span>
+                                            </td>
+                                            <td style="padding:10px;">
+                                                <span th:text="${payment.transactionId}"></span>
+                                            </td>
+                                            <td style="padding:10px; text-align:right;">
+                                                NPR <span th:text="${payment.amount}"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <p style="margin-top:14px; font-size:12px; color:#7f1d1d;">
+                                        ⚠️ This payment has been flagged due to mismatch with order amount.
+                                    </p>
+
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="padding-top:16px;">
+
+                        <p style="font-size:13px;">
+                            If you believe this is an error, please contact support immediately.
+                        </p>
+
+                        <table style="margin-top:10px;">
+                            <tr>
+                                <td style="background:#dc2626; border-radius:10px;">
+                                    <a href="http://localhost:3000/support"
+                                       style="display:inline-block; padding:10px 14px; color:#fff; text-decoration:none;">
+                                        Contact Support
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <p style="margin-top:12px; font-size:13px;">
+                            The epasal team.
+                        </p>
+
+                        <p style="font-size:11px; color:#9ca3af;">
+                            This is an automated email. Please do not reply.
+                        </p>
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+version: "3.9"
+
+services:
+  user-service:
+    build:
+      dockerfile: microservice/UserService/Dockerfile
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+      - eureka-server
+
+  product-service:
+    build:
+      dockerfile: microservice/ProductService/Dockerfile
+    container_name: product-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+
+  cart-service:
+    build:
+      dockerfile: microservice/CartService/Dockerfile
+    container_name: cart-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql
+      - eureka-server
+
+  order-service:
+    build:
+      dockerfile: microservice/OrderService/Dockerfile
+    container_name: order-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka-server
+
+  inventory-service:
+    build:
+      dockerfile: microservice/InventoryService/Dockerfile
+    container_name: inventory-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      - mysql
+      - eureka-server
+
+  mail-server:
+    build:
+      dockerfile: microservice/MailServer/Dockerfile
+    container_name: mail-server
+    ports:
+      - "8086:8086"
+    depends_on:
+      - rabbitmq
+      - eureka-server
+
+  eureka-server:
+    build:
+      dockerfile: microservice/eurekaServer/Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+
+  cloud-gateway:
+    build:
+      dockerfile: microservice/APICloudGateway/Dockerfile
+    container_name: cloud-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+      - product-service
+      - cart-service
+      - order-service
+      - inventory-service
+      - mail-server
+      - eureka-server
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    container_name: rabbitmq
+    environment:
+      - 'RABBITMQ_DEFAULT_PASS=secret'
+      - 'RABBITMQ_DEFAULT_USER=myuser'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  mysql-data:

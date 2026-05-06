@@ -1,0 +1,86 @@
+package epasal.com.inventoryservice.exception;
+
+import epasal.com.inventoryservice.dto.response.ApiResponse;
+import epasal.com.inventoryservice.dto.response.ErrorResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(InventoryAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleInventoryAlreadyExistsException(
+            InventoryAlreadyExistsException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .code("INVENTORY_ALREADY_EXISTS")
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(error));
+    }
+
+    @ExceptionHandler(InventoryNotFoundException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleInventoryNotFoundException(
+            InventoryNotFoundException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .code("INVENTORY_NOT_FOUND")
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(error));
+
+    }
+
+    @ExceptionHandler(StockNotAvailableException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleStockNotAvailableException(
+            StockNotAvailableException ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .code("STOCK_NOT_AVAILABLE")
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(error));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleGeneralException(Exception ex) {
+        ErrorResponse error = ErrorResponse.builder()
+                .code("INTERNAL_SERVER_ERROR")
+                .message("An unexpected error occurred: " + ex.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error(error));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleValidationException(MethodArgumentNotValidException ex) {
+        List<ErrorResponse.FieldError> fieldErrors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(this::mapFieldError)
+                .collect(Collectors.toList());
+
+
+        ErrorResponse error = ErrorResponse.builder()
+                .code("VALIDATION_ERROR")
+                .message("Invalid request parameters")
+                .details(fieldErrors)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(error));
+    }
+
+    private ErrorResponse.FieldError mapFieldError(FieldError fieldError) {
+        return ErrorResponse.FieldError.builder()
+                .field(fieldError.getField())
+                .message(fieldError.getDefaultMessage())
+                .build();
+    }
+}

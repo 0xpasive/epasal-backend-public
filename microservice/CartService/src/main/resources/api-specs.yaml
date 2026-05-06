@@ -1,0 +1,166 @@
+openapi: 3.1.1
+info:
+  title: Cart Service API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8084/api/v1/cart
+tags:
+  - name: Cart
+
+paths:
+  /add:
+    post:
+      tags:
+        - Cart
+      description: Add item to carts
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToCartRequest'
+      responses:
+        '200':
+          description: Item added to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_CartItemResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+  /get:
+    get:
+      tags:
+        - Cart
+      description: Get all items in carts
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Cart retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_CartResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+  /remove/{id}:
+    post:
+      tags:
+        - Cart
+      description: Remove item from cart
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "ep-product-123"
+      responses:
+        '200':
+          description: Item removed from cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_CartResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+  /remove/all:
+    delete:
+      tags:
+        - Cart
+      description: Clear cart
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Cart cleared successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_CartResponse'
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+
+
+
+
+components:
+  schemas:
+    AddToCartRequest:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "ep-product-123"
+        quantity:
+          type: integer
+          example: 2
+    CartItemResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "ep-product-123"
+        quantity:
+          type: integer
+          example: 3
+    ApiResponse_CartItemResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Item added to cart successfully"
+        data:
+          $ref: '#/components/schemas/CartItemResponse'
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-06-01T12:00:00Z"
+    ApiResponse_CartResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Cart retrieved successfully"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemResponse'
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-06-01T12:00:00Z"
+
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: [ ]
+
+

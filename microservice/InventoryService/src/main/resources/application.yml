@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: InventoryService
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://mysql:3306/inventorydb
+    username: user
+    password: password
+server:
+  port: 8085
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+        defaultZone: http://eureka-server:8761/eureka/
+springdoc:
+  api-docs:
+    path: /docs/inventory/v3/api-docs
