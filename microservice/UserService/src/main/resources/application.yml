@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: UserService
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    database: mysql
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: [REDACTED]
+            client-secret: [REDACTED]
+            redirect-uri: "https://backend.poudelsunil.info.np/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: myuser
+    password: secret
+  data:
+    redis:
+      host: redis
+      port: 6379
+      repositories:
+        enabled: false
+  datasource:
+    url: jdbc:mysql://mysql:3306/userdb
+    username: user
+    password: password
+
+
+
+jwt:
+  public-key: classpath:keys/public.key
+  private-key: classpath:keys/private.key
+
+  access-token-expiration: 36000
+
+server:
+  port: 8081
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+        defaultZone: http://eureka-server:8761/eureka/
+
+springdoc:
+  api-docs:
+    path: /docs/user/v3/api-docs

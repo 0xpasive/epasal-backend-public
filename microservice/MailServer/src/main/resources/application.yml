@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: MailServer
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: [REDACTED]
+    password: [REDACTED]
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+  docker:
+    compose:
+      file: microservice/MailServer/compose.yaml
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: myuser
+    password: secret
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+        defaultZone: http://eureka-server:8761/eureka/
+
+server:
+  port: 8086
